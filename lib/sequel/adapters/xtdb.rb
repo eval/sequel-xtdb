@@ -1,4 +1,4 @@
-require_relative 'shared/xtdb'
+require_relative "shared/xtdb"
 require "sequel/adapters/postgres"
 
 module Sequel
