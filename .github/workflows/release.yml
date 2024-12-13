@@ -23,6 +23,9 @@ jobs:
         ruby-version: ruby
     - name: Release
       run: |
+        # Writing version.rb changes the Gemfile.lock which
+        # halts subsequent rake tasks when in frozen mode
+        bundle config set frozen false
         bundle exec rake gem:release[${{  github.ref_name }}]
     - name: Wait for release to propagate
       run: |
