@@ -15,6 +15,10 @@ module Sequel
         @opts[:force_standard_strings] = false
         super
       end
+
+      def dataset_class_default
+        Dataset
+      end
     end
 
     class Dataset < Sequel::Postgres::Dataset
