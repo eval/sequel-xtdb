@@ -3,7 +3,7 @@
 require_relative "xtdb/version"
 
 module Sequel
-  module Xtdb
+  module XTDB
     class Error < StandardError; end
     # Your code goes here...
   end

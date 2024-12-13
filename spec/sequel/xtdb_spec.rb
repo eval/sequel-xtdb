@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-RSpec.describe Sequel::Xtdb do
+RSpec.describe Sequel::XTDB do
   it "has a version number" do
-    expect(Sequel::Xtdb::VERSION).not_to be nil
+    expect(Sequel::XTDB::VERSION).not_to be nil
   end
 
   it "does something useful" do

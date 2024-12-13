@@ -4,7 +4,7 @@ require_relative "lib/sequel/xtdb/version"
 
 Gem::Specification.new do |spec|
   spec.name = "sequel-xtdb"
-  spec.version = Sequel::Xtdb::VERSION
+  spec.version = Sequel::XTDB::VERSION
   spec.authors = ["Gert Goet"]
   spec.email = ["gert@thinkcreate.dk"]
 

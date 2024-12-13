@@ -1,5 +1,5 @@
 module Sequel
-  module Xtdb
+  module XTDB
     VERSION: String
     # See the writing guide of rbs: https://github.com/ruby/rbs#guides
   end
