@@ -1,28 +1,42 @@
 # Sequel::XTDB
 
-TODO: Delete this and the text below, and describe your gem
-
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/sequel/xtdb`. To experiment with that code, run `bin/console` for an interactive prompt.
+Adapter to connect to XTDB v2 using Sequel.
 
 ## Installation
-
-TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
 
 Install the gem and add to the application's Gemfile by executing:
 
 ```bash
-bundle add UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+bundle add sequel-xtdb
 ```
 
 If bundler is not being used to manage dependencies, install the gem by executing:
 
 ```bash
-gem install UPDATE_WITH_YOUR_GEM_NAME_IMMEDIATELY_AFTER_RELEASE_TO_RUBYGEMS_ORG
+gem install sequel-xtdb
 ```
 
 ## Usage
 
-TODO: Write usage instructions here
+Shortcut to happiness:
+```ruby
+# Get a Ruby console using the sequel CLI
+$ sequel 'xtdb://localhost:5432/xtdb'
+
+# ..or from repl/your project
+DB = Sequel.connect("xtdb://localhost:54321/xtdb")
+
+# then
+irb(main)> DB << "insert into products(_id, name, price) values(1, 'Spam', 1000), (2, 'Ham', 1200)"
+irb(main)> DB["select * from products"].all
+=> [{:_id=>2, :name=>"Ham", :price=>1200}, {:_id=>1, :name=>"Spam", :price=>1100}]
+```
+
+## Status
+
+Very early days :)  
+Currently it's essentially the postgres-adapter with support for a xtdb-scheme url.
+
 
 ## Development
 
