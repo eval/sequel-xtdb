@@ -6,6 +6,7 @@
 /pkg/
 /spec/reports/
 /tmp/
+/.envrc.*
 
 # rspec failure tracking
 .rspec_status
