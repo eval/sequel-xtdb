@@ -24,13 +24,42 @@ Shortcut to happiness:
 $ sequel 'xtdb://localhost:5432/xtdb'
 
 # ..or from repl/your project
-DB = Sequel.connect("xtdb://localhost:54321/xtdb")
+DB = Sequel.connect("xtdb://localhost:5432/xtdb")
 
 # then
 irb(main)> DB << "insert into products(_id, name, price) values(1, 'Spam', 1000), (2, 'Ham', 1200)"
 irb(main)> DB["select * from products"].all
 => [{:_id=>2, :name=>"Ham", :price=>1200}, {:_id=>1, :name=>"Spam", :price=>1100}]
 ```
+
+### time-travel
+
+_these examples use the [activesupport time helpers](https://api.rubyonrails.org/classes/ActiveSupport/Duration.html)_
+
+```ruby
+DB = Sequel.connect("xtdb://localhost:5432/xtdb")
+
+# get a dataset (ie query)
+users = DB[:users]
+past, future = 2.days.ago, 2.days.from_now
+ds1, ds2 = users.as_of(valid: past), users.as_of(valid: future)
+
+# expect empty
+ds1.all
+ds1.insert(_id: 1, name: "James")
+
+# expect a user
+ds1.as_of(valid: 2.days.ago).all
+
+# add to future
+ds2.insert(_id: 2, name: "Jeremy")
+
+# expect only James
+users.all
+# expect both James and Jeremy
+ds2.as_of(valid: 2.days.from_now).all
+```
+
 
 ## Status
 
