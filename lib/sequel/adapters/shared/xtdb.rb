@@ -4,6 +4,11 @@ module Sequel
       def database_type
         :xtdb
       end
+
+      def primary_key(_table)
+        # eg used for RETURNING on insert (prevents crash)
+        :_id
+      end
     end
 
     module DatasetMethods
