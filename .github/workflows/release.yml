@@ -4,7 +4,7 @@ on:
     tags:
       - '*'
 
-name: Push Gem
+name: Release Gem
 jobs:
   push:
     runs-on: ubuntu-latest
