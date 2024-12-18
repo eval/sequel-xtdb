@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "sequel/xtdb"
+require "sequel/adapters/xtdb"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

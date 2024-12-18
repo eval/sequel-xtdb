@@ -32,12 +32,6 @@ module Sequel
 
     class Dataset < Sequel::Postgres::Dataset
       include ::Sequel::XTDB::DatasetMethods
-
-      private
-
-      def default_timestamp_format
-        "'%Y-%m-%d %H:%M:%S'"
-      end
     end
   end
 end

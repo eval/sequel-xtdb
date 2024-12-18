@@ -1,6 +1,25 @@
+require "sequel/adapters/utils/unmodified_identifiers"
+
 module Sequel
   module XTDB
+    Sequel::Database.set_shared_adapter_scheme :xtdb, self
+
+    def self.mock_adapter_setup(db)
+      db.instance_exec do
+        @server_version = 0
+
+        # def schema_parse_table(*)
+        #  []
+        # end
+        # singleton_class.send(:private, :schema_parse_table)
+        # adapter_initialize
+        # extend(MockAdapterDatabaseMethods)
+      end
+    end
+
     module DatabaseMethods
+      include UnmodifiedIdentifiers::DatabaseMethods # ensure lowercase identifiers
+
       def database_type
         :xtdb
       end
@@ -17,6 +36,8 @@ module Sequel
     end
 
     module DatasetMethods
+      include UnmodifiedIdentifiers::DatasetMethods # ensure lowercase identifiers
+
       Dataset.def_sql_method(self, :select,
         [["if opts[:values]",
           %w[values compounds order limit]],
@@ -90,6 +111,12 @@ module Sequel
           end
         end.join(", "))
         sql.concat " "
+      end
+
+      private
+
+      def default_timestamp_format
+        "'%Y-%m-%d %H:%M:%S'"
       end
     end
   end
