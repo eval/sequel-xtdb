@@ -1,8 +1,8 @@
-# Sequel::XTDB
+# sequel-xtdb
 
 [![Gem Version](https://badge.fury.io/rb/sequel-xtdb.svg?icon=si%3Arubygems)](https://badge.fury.io/rb/sequel-xtdb)
 
-Adapter to connect to XTDB v2 using Sequel.
+Adapter to connect to [XTDB](https://docs.xtdb.com/) v2 using [Sequel](https://sequel.jeremyevans.net/).
 
 ## Installation
 
