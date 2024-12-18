@@ -36,21 +36,20 @@ irb(main)> DB["select * from products"].all
 
 ### time-travel
 
-_these examples use the [activesupport time helpers](https://api.rubyonrails.org/classes/ActiveSupport/Duration.html)_
-
 ```ruby
+def shift_days(n, from: Time.now)= from + (60 * 60 * 24 * n)
 DB = Sequel.connect("xtdb://localhost:5432/xtdb")
 
 # get a dataset (ie query)
 users = DB[:users]
-ds1, ds2 = users.as_of(valid: 2.days.ago), users.as_of(valid: 2.days.from_now)
+ds1, ds2 = users.as_of(valid: shift_days(-2)), users.as_of(valid: shift_days(2))
 
 # expect empty
 ds1.all
 ds1.insert(_id: 1, name: "James")
 
 # expect a user
-ds1.as_of(valid: 2.days.ago).all
+ds1.as_of(valid: shift_days(-1)).all
 
 # add to future
 ds2.insert(_id: 2, name: "Jeremy")
@@ -58,14 +57,12 @@ ds2.insert(_id: 2, name: "Jeremy")
 # expect only James
 users.all
 # expect both James and Jeremy
-ds2.as_of(valid: 2.days.from_now).all
+ds2.as_of(valid: shift_days(3)).all
 ```
-
 
 ## Status
 
-Very early days :)  
-Currently it's essentially the postgres-adapter with support for a xtdb-scheme url.
+Very early days :)
 
 
 ## Development
