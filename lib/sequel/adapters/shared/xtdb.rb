@@ -11,32 +11,8 @@ module Sequel
       end
 
       # Get a dataset with `current`, `valid` and `system` set.
-      #
-      # For selects this creates the SETTING pre-amble, e.g. 'SETTING DEFAULT VALID_TIME ...':
-      # ```
-      # DB.as_of(current: 2.weeks.ago).select(Sequel.lit('current_timestamp')).single_value
-      # ```
-      #
-      # A block can be provided as a convenience to stay in SQL-land (selects only):
-      # ```
-      # DB.as_of(current: 2.hours.ago) do
-      #   DB["select current_timestamp"]
-      # end.sql
-      # =>
-      # SETTING
-      #  CURRENT_TIME TO TIMESTAMP '2024-12-17T12:59:48+01:00'
-      # select current_timestamp
-      # ```
-      #
-      # When doing inserts, the `_valid_from` will be added (if not provided):
-      # ```
-      # DB[:products].as_of(valid: 2.weeks.ago).insert(_id: 1, name: 'Spam')
-      # ```
       def as_of(...)
-        ds = @default_dataset.as_of(...)
-        return ds unless block_given?
-
-        yield.clone(append_sql: ds.select_setting_sql(""))
+        @default_dataset.as_of(...)
       end
     end
 
@@ -45,7 +21,7 @@ module Sequel
         [["if opts[:values]",
           %w[values compounds order limit]],
           ["else",
-            %w[setting select distinct columns from join where group having compounds order limit lock]]])
+            %w[select distinct columns from join where group having compounds order limit lock]]])
 
       def as_of(valid: nil, system: nil, current: nil)
         {valid: valid, system: system, current: current}.reject { |_k, v| v.nil? }.then do |opts|
@@ -77,27 +53,43 @@ module Sequel
         super
       end
 
-      def select_setting_sql(sql)
+      def select_sql
+        sql = super
+
+        if (setting = select_setting_sql)
+          if sql.frozen?
+            setting += sql
+            setting.freeze
+          elsif @opts[:append_sql] || @opts[:placeholder_literalizer]
+            setting << sql
+          else
+            setting + sql
+          end
+        else
+          sql
+        end
+      end
+
+      def select_setting_sql
         setting = opts.slice(:current, :valid, :system)
-        return sql if setting.empty?
+        return if setting.empty?
 
         cast_value = ->(v) do
-          case v
-          when DateTime, Time
-            literal_append "TIMESTAMP ", v.iso8601
-          when Date
-            literal_append "DATE ", v.iso8601
+          type = case v
+          when DateTime, Time then "TIMESTAMP"
+          when Date then "DATE"
           end
+          literal_append "#{type} ", v.iso8601
         end
-        sql << "SETTING "
-        sql << setting.map do |k, v|
+        sql = "SETTING "
+        sql.concat(setting.map do |k, v|
           if k == :current
-            literal_append "CURRENT_TIME TO TIMESTAMP ", v.iso8601
+            "CURRENT_TIME TO #{cast_value[v.to_time]}"
           else
             "DEFAULT #{k.upcase}_TIME AS OF #{cast_value[v]}"
           end
-        end.join(", ")
-        sql << " "
+        end.join(", "))
+        sql.concat " "
       end
     end
   end
