@@ -51,6 +51,8 @@ module Sequel
       end
 
       def server_version
+        # TODO 2_000_000 from xt.version() output
+        # requires all def_sql_methods
         0
       end
 
