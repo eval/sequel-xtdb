@@ -41,8 +41,7 @@ DB = Sequel.connect("xtdb://localhost:5432/xtdb")
 
 # get a dataset (ie query)
 users = DB[:users]
-past, future = 2.days.ago, 2.days.from_now
-ds1, ds2 = users.as_of(valid: past), users.as_of(valid: future)
+ds1, ds2 = users.as_of(valid: 2.days.ago), users.as_of(valid: 2.days.from_now)
 
 # expect empty
 ds1.all
