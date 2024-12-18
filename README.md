@@ -72,7 +72,12 @@ Currently it's essentially the postgres-adapter with support for a xtdb-scheme u
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests.
 
-You can also run `bin/console [xtdb-url]` for an interactive prompt that will allow you to experiment. The script will pick up on env-var `XTDB_URL`, though the argument takes precedence.
+You can also run `bin/console [xtdb-url]` for an interactive prompt that will allow you to experiment. The script will pick up on env-var `XTDB_URL`, though the argument takes precedence. The console-script sets up (query-)logging.  
+
+Speaking of logging: best to start the XTDB docker container with debug-logging:
+```
+docker run -it --pull=always -e XTDB_LOGGING_LEVEL=debug -v $PWD/tmp/db:/var/lib/xtdb -p 6543:3000 -p 5432:5432 ghcr.io/xtdb/xtdb:nightly
+```
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
